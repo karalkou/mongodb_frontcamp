@@ -1,0 +1,37 @@
+3.1 
+Query:  db.restaurants.find({"cuisine":"Chinese","borough":"Queens"}).count()
+		ИЛИ 
+		db.restaurants.find({$and:[{"cuisine":"Chinese"},{"borough":"Queens"}]}).count()
+Result: 728
+
+3.2
+Query:  db.restaurants.find().sort({"grades.score":-1}).limit(1)
+Result: "_id" : ObjectId("5a5b4bd9a66ecd184fbc2d6c")
+
+3.3
+Query:  db.restaurants.updateMany({"borough":"Manhattan"},{$push:{"grades":{"grade":"A","score":7,"date":ISODate()}}})
+Result: { "acknowledged" : true, "matchedCount" : 10259, "modifiedCount" : 10259 }
+
+3.4
+Query:  db.restaurants.find({"grades.8.score": {$lt: 7}}, {_id: 0, name: 1})
+Result: { "name" : "Silver Krust West Indian Restaurant" }
+		{ "name" : "Pure Food" }
+		
+3.5
+Query:  db.restaurants.find(
+			{ 
+				$and: [
+					{ 
+						cuisine: "Seafood"
+					},
+					{ 
+						grades: { $elemMatch: {"grade": "B", "date": { $gte: ISODate("2014-02-01T00:00:00.000Z"), $lte: ISODate("2014-03-01T00:00:00.000Z") }} }
+					}
+				]
+			}, 
+			{ borough: 1 }
+		)
+		В одну строку:
+		db.restaurants.find({$and: [{cuisine: "Seafood"},{grades: { $elemMatch: {"grade": "B", "date": { $gte: ISODate("2014-02-01T00:00:00.000Z"), $lte: ISODate("2014-03-01T00:00:00.000Z") }} }}]},{ borough: 1 })
+Result: { "_id" : ObjectId("5a5b4bd9a66ecd184fbc6179"), "borough" : "Bronx" }
+		{ "_id" : ObjectId("5a5b4bd9a66ecd184fbc63f1"), "borough" : "Manhattan" }
