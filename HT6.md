@@ -72,3 +72,53 @@ db.airlines.aggregate([
 { "avgPassengers" : 7103.333333333333, "city" : "Guangzhou, China" }
 ```
 ---
+
+#### 3
+###### Query:
+```javascript
+db.airlines.aggregate([
+    {
+        $match: {
+            destCountry: { $eq: "Latvia" }
+        }
+    },
+    {
+        $group: {
+            _id: {
+                destCountry: "$destCountry"
+            },
+            carriers: {
+                $addToSet: "$carrier"
+            }
+        }
+    },
+    {
+        $project: {
+            _id: 0,
+            _id: "$_id.destCountry",
+            carriers: "$carriers"
+        }
+    }
+]).pretty()
+```
+###### Result:
+```javascript
+{
+    "_id" : "Latvia",
+    "carriers" : [
+        "Uzbekistan Airways",
+        "Blue Jet SP Z o o",
+        "JetClub AG"
+    ]
+}
+```
+---
+
+#### 4
+###### Query:
+```javascript
+```
+###### Result:
+```javascript
+```
+---
