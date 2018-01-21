@@ -117,6 +117,64 @@ db.airlines.aggregate([
 #### 4
 ###### Query:
 ```javascript
+db.airlines.aggregate([
+    {
+        $match: {
+            originCountry: { $eq: "United States"}
+        }
+    },
+    {
+        $match: {
+            $or: [
+                {destCountry: "Greece"},
+                {destCountry: "Italy"},
+                {destCountry: "Spain"}
+            ]
+        }
+    },
+    {
+        $group: {
+            _id: {
+                carrier: "$carrier"
+            },
+            total: { $sum: "$passengers" }
+        }
+    },
+    {
+        $sort: {
+            total: -1
+        }
+    },
+    {
+        $limit: 10
+    },
+    {
+        $skip: 3
+    },
+    {
+        $project: {
+            _id: 0,
+            _id: "$_id.carrier",
+            total: "$total"
+        }
+    }
+])
+```
+###### Result:
+```javascript
+{ "_id" : "Compagnia Aerea Italiana", "total" : 280256 }
+{ "_id" : "United Air Lines Inc.", "total" : 229936 }
+{ "_id" : "Emirates", "total" : 100903 }
+{ "_id" : "Air Europa", "total" : 94968 }
+{ "_id" : "Meridiana S.p.A", "total" : 20308 }
+{ "_id" : "Norwegian Air Shuttle ASA", "total" : 13344 }
+{ "_id" : "VistaJet Limited", "total" : 183 }
+```
+---
+
+#### 5
+###### Query:
+```javascript
 ```
 ###### Result:
 ```javascript
