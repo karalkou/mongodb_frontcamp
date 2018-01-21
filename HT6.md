@@ -267,3 +267,17 @@ db.airlines.aggregate([
 }
 ```
 ---
+---
+
+### Enron
+
+###### Query:
+```
+show collections
+```
+###### Result:
+```
+airlines
+enron
+restaurants
+```
