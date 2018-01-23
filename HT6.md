@@ -331,8 +331,8 @@ db.enron.aggregate([
         "from" : "susan.mara@enron.com",
         "to" : "jeff.dasovich@enron.com"
     },
-        "totalTos" : 750
-    }
+    "totalTos" : 750
+}
 ```
 
 
