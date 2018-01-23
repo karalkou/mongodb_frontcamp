@@ -281,3 +281,82 @@ airlines
 enron
 restaurants
 ```
+
+
+###### Query
+```javascript
+db.enron.aggregate([
+    {
+        $unwind: "$headers.To"
+    },
+    {
+        $group: {
+            _id: {
+                _id: "$_id",
+                from: "$headers.From"
+            },
+            to: {
+                $addToSet: "$headers.To"
+            }
+        }
+    },
+    {
+        $unwind: "$to"
+    },
+    {
+        $group: {
+            _id: {
+                from: "$_id.from",
+                to: "$to"
+            },
+            totalTos: {
+                $sum: 1
+            }
+        }
+    },
+    {
+        $sort: {
+            "totalTos": -1
+        }
+    },
+    {
+        $limit: 1
+    }
+], {allowDiskUse: true}).pretty()
+```
+###### Result:
+```
+{
+    "_id" : {
+        "from" : "susan.mara@enron.com",
+        "to" : "jeff.dasovich@enron.com"
+    },
+        "totalTos" : 750
+    }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
